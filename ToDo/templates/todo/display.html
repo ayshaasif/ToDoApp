@@ -1,0 +1,79 @@
+{% extends 'todo/base.html' %}
+
+{% load static %}
+
+    {% block styles  %}
+      {% if reminders|length > 0%}
+         <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+      {% else %}
+           <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+            <style>
+                body{
+                  background:#f2f2f2;
+                }
+                .heading{
+                 margin-left:5%;
+                 back-ground:#f2f2f2;
+                }
+                .else-link{
+                   color:white;
+                }
+                .else-container{
+                margin:-1% 20% 2%;
+                background:grey;
+                display:block;
+                text-align:center;
+                }
+                #else-text1,#else-text2{
+                   font-weight:800;
+                   font-size:50px;
+                   font-style:bold;
+                }
+            </style>
+       {% endif  %}
+
+    {% endblock %}
+
+{% block content %}
+    <br><div class="heading">
+      <h1 class="word1">Lets</h1>
+      <h1 class="word2">Do</h1>
+      <h1 class="word3">This!</h1>
+    </div>
+   {% if reminders|length > 0%}
+   <div class="display">
+     <form class="search-form" method="get">
+         <div class="search-bar-container">
+               <span><input class="search-bar" type='text' name="search" placeholder=" Search Reminder"></span>
+               <span><input class="search-button" type="submit" value="Search"></span>
+         </div>
+     </form>
+     <div class="card-container">
+        <form class='card-form' method = 'post' action="{% url 'deleteReminder'%}">
+          {% csrf_token %}
+          {% for object in reminders %}
+            <li>
+                <a class='card-link' href="{% url 'updateReminder' object.id %}">
+                    <div class="card">
+                        <p><input class="ticks" type="checkBox" value="{{object.id}}" name = "remind"></p>
+                        <p class="text">Reminder: {{object.Name}}<br>{{object.Date}} <br>{{object.Time}} </p>
+                    </div>
+                </a>
+            </li>
+          {% endfor %}
+                <button type="submit" name="DELETE">delete</button>
+       </form>
+     </div>
+   </div>
+   <!--{% elif search_input in reminders and search_input is not empty %}-->
+         <!--<h1 class="else-container">Try other key word</h1>-->
+   {% else %}
+       <a class="else-link" href="{% url 'createReminder' %}">
+           <div class="else-container">
+                 <p id="else-text1">no-reminders</p>
+                 <p id="else-text2">click to add Reminder</p>
+           </div>
+       </a>
+
+   {% endif  %}
+{% endblock %}
